@@ -54,6 +54,7 @@ WORD_SIZE_BITS_ARCH = {
     "ia64": 64,
     "x86_64": 64,
     "arm_hyp": 32,
+    "loongarch64": 64,
     "riscv32": 32,
     "riscv64": 64,
 }
@@ -65,6 +66,7 @@ MESSAGE_REGISTERS_FOR_ARCH = {
     "ia32-mcs": 1,
     "x86_64": 4,
     "arm_hyp": 4,
+    "loongarch64": 4,
     "riscv32": 4,
     "riscv64": 4,
 }
@@ -371,6 +373,14 @@ def init_arch_types(wordsize, args):
             CapType("seL4_RISCV_PageTable", wordsize),
             CapType("seL4_RISCV_ASIDControl", wordsize),
             CapType("seL4_RISCV_ASIDPool", wordsize),
+            StructType("seL4_UserContext", wordsize * 32, wordsize),
+        ],
+        "loongarch64": [
+            Type("seL4_LoongArch_VMAttributes", wordsize, wordsize),
+            CapType("seL4_LoongArch_Page", wordsize),
+            CapType("seL4_LoongArch_PageTable", wordsize),
+            CapType("seL4_LoongArch_ASIDControl", wordsize),
+            CapType("seL4_LoongArch_ASIDPool", wordsize),
             StructType("seL4_UserContext", wordsize * 32, wordsize),
         ]
     }

@@ -136,6 +136,13 @@ elseif(KernelArchRiscV)
 
   string(APPEND common_flags " -march=${_riscv_march} -mabi=${_riscv_mabi}")
 
+elseif(KernelArchLoongArch)
+  if(NOT KernelSel4ArchLoongArch64)
+    message(FATAL_ERROR "unknown LoongArch KernelSel4Arch '${KernelSel4Arch}'")
+  endif()
+
+  string(APPEND common_flags " -march=loongarch64 -mabi=lp64d")
+
 else()
   message(FATAL_ERROR "unknown KernelArch '${KernelArch}'")
 endif()
@@ -291,6 +298,12 @@ elseif(KernelArchRiscV)
   # exceeds 4KiB.
   #
   KernelCommonFlags(-mcmodel=medany -msmall-data-limit=1024)
+
+elseif(KernelArchLoongArch)
+  KernelCommonFlags(-mno-relax)
+  if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-maybe-uninitialized)
+  endif()
 
 else()
   message(FATAL_ERROR "unknown KernelArch '${KernelArch}'")
@@ -550,6 +563,8 @@ if(KernelArchARM)
   set(linker_source "src/arch/arm/common_arm.lds")
 elseif(KernelArchRiscV)
   set(linker_source "src/arch/riscv/common_riscv.lds")
+elseif(KernelArchLoongArch)
+  set(linker_source "src/arch/loongarch/common_loongarch.lds")
 else()
   set(linker_source "src/plat/${KernelPlatform}/linker.lds")
 endif()
@@ -574,8 +589,14 @@ add_custom_target(kernel_all_pp_wrapper DEPENDS kernel_all_pp.c)
 
 add_custom_target(kernel_theories DEPENDS ${theories_deps})
 
-# Declare final kernel output
-add_executable(kernel.elf EXCLUDE_FROM_ALL ${asm_sources} kernel_all.c)
+# Declare final kernel output. The LoongArch seL4 C kernel target is only a
+# build-time placeholder for this project; pack-image replaces it with the Rust
+# kernel before booting sel4test.
+if(KernelArchLoongArch)
+  add_executable(kernel.elf EXCLUDE_FROM_ALL ${asm_sources} src/arch/loongarch/dummy_kernel.c)
+else()
+  add_executable(kernel.elf EXCLUDE_FROM_ALL ${asm_sources} kernel_all.c)
+endif()
 target_include_directories(kernel.elf PRIVATE ${config_dir})
 target_include_directories(kernel.elf PRIVATE include)
 target_include_directories(kernel.elf PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated")

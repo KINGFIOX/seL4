@@ -53,7 +53,7 @@ function(FindPrefixedGCC out_var)
 endfunction(FindPrefixedGCC)
 
 if("${CROSS_COMPILER_PREFIX}" STREQUAL "")
-    if(("${arch}" STREQUAL "arm") OR ("${arch}" STREQUAL "x86") OR ("${arch}" STREQUAL "riscv"))
+    if(("${arch}" STREQUAL "arm") OR ("${arch}" STREQUAL "loongarch") OR ("${arch}" STREQUAL "x86") OR ("${arch}" STREQUAL "riscv"))
         if(${sel4_arch} STREQUAL "aarch32" OR ${sel4_arch} STREQUAL "arm_hyp")
             FindPrefixedGCC(
                 CROSS_COMPILER_PREFIX
@@ -78,6 +78,14 @@ if("${CROSS_COMPILER_PREFIX}" STREQUAL "")
                 "riscv64-none-elf-"
                 "riscv64-elf-"
                 "riscv64-linux-gnu-"
+            )
+        elseif(${arch} STREQUAL "loongarch")
+            FindPrefixedGCC(
+                CROSS_COMPILER_PREFIX
+                "loongarch64-unknown-linux-gnu-"
+                "loongarch64-linux-gnu-"
+                "loongarch64-unknown-none-"
+                "loongarch64-none-elf-"
             )
         endif()
     else()
