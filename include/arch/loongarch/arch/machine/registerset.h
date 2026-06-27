@@ -91,18 +91,12 @@ extern const register_t gpRegisters[] VISIBLE;
 
 #ifdef CONFIG_HAVE_FPU
 
-#define RISCV_NUM_FP_REGS   32
+#define LOONGARCH_NUM_FP_REGS 32
 
-#if defined(CONFIG_RISCV_EXT_D)
 typedef uint64_t fp_reg_t;
-#elif defined(CONFIG_RISCV_EXT_F)
-typedef uint32_t fp_reg_t;
-#else
-#error Unknown RISCV FPU extension
-#endif
 
 typedef struct user_fpu_state {
-    fp_reg_t regs[RISCV_NUM_FP_REGS];
+    fp_reg_t regs[LOONGARCH_NUM_FP_REGS];
     uint32_t fcsr;
 } user_fpu_state_t;
 
@@ -185,4 +179,3 @@ static inline word_t CONST sanitiseRegister(register_t reg, word_t v, bool_t arc
 }
 
 #endif /* __ASSEMBLER__ */
-

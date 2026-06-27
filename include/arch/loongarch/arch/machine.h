@@ -232,13 +232,13 @@ static inline word_t read_sscratch(void)
 static inline uint32_t read_fcsr(void)
 {
     uint32_t fcsr;
-    asm volatile("csrr %0, fcsr" : "=r"(fcsr));
+    asm volatile("movfcsr2gr %0, $fcsr0" : "=r"(fcsr));
     return fcsr;
 }
 
 static inline void write_fcsr(uint32_t value)
 {
-    asm volatile("csrw fcsr, %0" :: "rK"(value));
+    asm volatile("movgr2fcsr $fcsr0, %0" :: "r"(value));
 }
 #endif
 

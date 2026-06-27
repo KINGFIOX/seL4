@@ -12,8 +12,8 @@ config_string(
   UNDEF_DISABLED UNQUOTE
   DEPENDS "KernelArchLoongArch")
 
-set(_KernelLoongArchExtD OFF)
-set(_KernelLoongArchExtF OFF)
+set(_KernelLoongArchExtD ON)
+set(_KernelLoongArchExtF ON)
 if(LLVM_TOOLCHAIN AND KernelSel4ArchLoongArch32)
   # Versions of clang we support can't compile for D double width floating
   # point. But we've found that having F but not D still leads to errors with
@@ -86,7 +86,7 @@ if(KernelLoongArchExtD)
   set(KernelLoongArchExtF ON)
 endif()
 
-set(KernelHaveFPU OFF)
+set(KernelHaveFPU ON)
 
 # This is not supported on LoongArch
 set(KernelHardwareDebugAPIUnsupported ON CACHE INTERNAL "")

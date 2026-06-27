@@ -119,6 +119,7 @@ BOOT_CODE static void init_fpu(void)
 {
     set_fs_clean();
     write_fcsr(0);
+    set_fs_off();
     disableFpu();
 }
 #endif
